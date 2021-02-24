@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Photo Gallery</title>
+
+  <!-- https://google.github.io/material-design-icons/#icon-font-for-the-web -->
+  <!-- Using via Google Web Fonts -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+  <!-- https://tailwindcss.com/docs/installation -->
+  <!-- Using Tailwind via CDN -->
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
+
+  <!-- https://v3.vuejs.org/guide/installation.html#release-notes -->
+  <!-- Vue CDN -->
+  <script src="https://unpkg.com/vue@next"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- Search Bar -->
+    <div id="search-bar">
+      <span class="material-icons text-5xl cursor-pointer" v-show="!searchbutton" @click="searchBarToggle">search
+      </span>
+      <div v-show="searchbutton"><input type="text" placeholder="Search the photo" v-model="form.searchText"
+          class="border border-black" @keyup.enter="search">
+        <p>Photo : {{form.searchText}} </p> <button @click="searchBarToggle">Cancel</button>
+      </div>
+      <h1 class="text-5xl font-bold tracking-tighter text-blue-800 title-font mx-auto text-center mt-10">My Photo
+        Gallery
+        ( {{photos.length}} ), You liked ( {{countLike}} )</h1>
+    </div>
+
+
+    <!-- ฺBig Picture -->
+    <div class="h-96 w-screen bg-black flex justify-center mt-10" v-if="isBigPicture">
+      <img :src="bigPictureSrc">
+      <div @click="isBigPicture=false" class="w-10 h-10 absolute bg-red-400 right-3.5 mt-3.5"></div>
+    </div>
+
+    <!-- Photo Gallery -->
+    <div class="py-5 pl-10" v-if="searched.length != 0" v-for="(photo,index) in searched">
+      <div class="container flex flex-col items-center px-5 py-3 mx-auto lg:px-20 lg:py-20 md:flex-row">
+        <div class="w-5/6 mb-10 lg:max-w-lg lg:w-full md:w-1/2 md:mb-0">
+          <img :src="photo.url" class="object-cover object-center rounded" style="height: 720px; width: 600px"
+            @click="bigPic(index)" />
+        </div>
+        <div
+          class="flex flex-col items-center text-center lg:flex-grow md:w-1/2 lg:pl-24 md:pl-16 md:items-start md:text-left">
+          <h2 class="mb-1 text-xs font-medium tracking-widest text-blue-500 title-font">
+            {{photo.title}}
+          </h2>
+          <h1
+            class="mb-8 text-2xl font-bold tracking-tighter text-center text-blue-800 lg:text-left lg:text-5xl title-font">
+            {{photo.description}}
+          </h1>
+
+          <!-- Liked Icon -->
+          <div class="flex justify-center">
+            <p v-show="!photo.liked" @click="toggleLike(index)"
+              class="inline-flex items-center font-semibold text-5xl text-pink-400 md:mb-2 lg:mb-0 hover:text-pink-300 cursor-pointer material-icons">
+              favorite_border
+            </p>
+            <p v-show="photo.liked" @click="toggleLike(index)"
+              class="inline-flex items-center font-semibold text-5xl text-pink-400 md:mb-2 lg:mb-0 hover:text-pink-300 cursor-pointer material-icons">
+              favorite
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- If no photo show "No Photo" -->
+    <div id="no-photo" v-else class="text-4xl font-bold tracking-tighter text-center text-blue-800 mt-48">
+      <h2>No Photo</h2>
+    </div>
+
+  </div>
+  <script src="main.js"></script>
+</body>
+
+</html>
